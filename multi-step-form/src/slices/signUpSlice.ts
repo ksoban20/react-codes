@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { hasKeys, diffObject } from '../utils/misc';
 
-const CLASS_SLICE = 'class_slice';
+const SIGNUP_SLICE = 'signup_slice';
 
 export interface IPayload {
   payload: {
@@ -16,37 +16,81 @@ export interface Error {
   responseError?: any;
 }
 
-export interface ClassForm {
-  name?: string;
+export interface SignUpForm {
+  firstName: string;
+  lastName?: string;
+  dob: string;
+  userName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  contactNumber: string;
+  gender: string;
   id?: number;
   active?: boolean;
 }
+
+interface Steps {
+  id: number;
+  title: string;
+  fields: (keyof SignUpForm)[];
+}
+
 export interface RootObject {
-  classes: ClassForm[];
-  fetchedClass: ClassForm;
-  currentClass: ClassForm;
-  form: ClassForm;
+  signUp: SignUpForm[];
+  currentForm: SignUpForm;
+  form: SignUpForm;
+  steps: Steps[];
   currentDialog: {
     dialog: string;
     data: {} | null;
   };
   touched: boolean;
   loading: boolean;
-  loadingClass: boolean;
   success?: any;
   error: Error;
 }
 
 export const initialState: RootObject = {
-  classes: [],
-  fetchedClass: {
-    name: '',
+  signUp: [],
+  currentForm: {
+    firstName: '',
+    lastName: '',
+    dob: '',
+    userName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    contactNumber: '',
+    gender: '',
   },
-  currentClass: {
-    name: '',
-  },
+  steps: [
+    {
+      id: 1,
+      title: 'Signup Info',
+      fields: ['email', 'password', 'confirmPassword'],
+    },
+    {
+      id: 2,
+      title: 'Personal Info',
+      fields: ['userName', 'firstName', 'lastName', 'dob'],
+    },
+    {
+      id: 3,
+      title: 'Additional Info',
+      fields: ['contactNumber', 'gender'],
+    },
+  ],
   form: {
-    name: '',
+    firstName: '',
+    lastName: '',
+    dob: '',
+    userName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    contactNumber: '',
+    gender: '',
   },
   currentDialog: {
     dialog: '',
@@ -54,7 +98,6 @@ export const initialState: RootObject = {
   },
   touched: false,
   loading: false,
-  loadingClass: false,
   success: null,
   error: {
     validation: {},
@@ -62,11 +105,11 @@ export const initialState: RootObject = {
   },
 };
 
-export const loginSlice = createSlice({
-  name: CLASS_SLICE,
+export const signUpSlice = createSlice({
+  name: SIGNUP_SLICE,
   initialState,
   reducers: {
-    resetClass() {
+    reset() {
       return initialState;
     },
     updateForm(state, { payload }: IPayload) {
@@ -77,15 +120,12 @@ export const loginSlice = createSlice({
 
       state.touched = hasKeys(diffObject(state.form, initialState.form));
     },
-    updateClass(state, { payload }: IPayload) {
-      state.currentClass = {
-        ...state.currentClass,
-        ...payload,
-      };
-
-      state.touched = hasKeys(
-        diffObject(state.currentClass, state.fetchedClass)
-      );
+    updateFormField(
+      state,
+      action: PayloadAction<{ field: keyof SignUpForm; value: string }>
+    ) {
+      const { field, value } = action.payload;
+      Object.assign(state.form, { [field]: value });
     },
     resetForm(state) {
       state.form = initialState.form;
@@ -111,12 +151,12 @@ export const loginSlice = createSlice({
 });
 
 export const {
-  resetClass,
+  reset,
   updateForm,
   resetForm,
-  updateClass,
   setValidationError,
   resetValidationError,
-} = loginSlice.actions;
+  updateFormField,
+} = signUpSlice.actions;
 
-export default loginSlice.reducer;
+export default signUpSlice.reducer;

@@ -1,6 +1,6 @@
 import { configureStore, getDefaultMiddleware, Store } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
-import loginSlice from './slices/loginSlice';
+import signUpSlice from './slices/signUpSlice';
 
 export interface ThunkExtraArguments {
   store: Store;
@@ -21,7 +21,7 @@ const middleWares = getDefaultMiddleware({
 
 const store = configureStore({
   reducer: {
-    login: loginSlice,
+    signUp: signUpSlice,
   },
   middleware: middleWares,
 });

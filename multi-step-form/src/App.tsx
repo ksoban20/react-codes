@@ -1,130 +1,60 @@
-import React, { useState } from 'react';
-import './App.css';
-
-const steps = [
-  {
-    id: 1,
-    title: 'Signup Info',
-    fields: ['Email Address', 'Password', 'Confirm Password'],
-  },
-  {
-    id: 2,
-    title: 'Personal Info',
-    fields: ['User Name', 'First Name', 'Last Name'],
-  },
-  {
-    id: 3,
-    title: 'Professional Info',
-    fields: ['Current Company', 'Total Experience', 'Designation'],
-  },
-  // add more steps to the form ..
-  // for example step 4 , 5 ...etc
-];
+import { useState } from 'react';
+import './assets/styles/style.css';
+import Inputs from './components/Inputs';
+import { useSignUp } from './utils/hooks';
+import { useDispatch } from 'react-redux';
+import { updateForm } from './slices/signUpSlice';
 
 function App() {
-  const [activeForm, setActiveForm] = useState(1);
-  const [modalActive, setModalActive] = useState(false);
+  const dispatch = useDispatch();
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const handleNext = () => {
-    if (activeForm < steps.length) {
-      setActiveForm(activeForm + 1);
-    }
+  const nextStep = () => {
+    setCurrentStep((prev) => Math.min(prev + 1, 3));
   };
 
-  const handleBack = () => {
-    if (activeForm > 1) {
-      setActiveForm(activeForm - 1);
-    }
+  const prevStep = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleDone = () => {
-    setModalActive(true);
+  const { form }: any = useSignUp();
+  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    dispatch(updateForm({ [name]: value }));
   };
-
-  const closeModal = () => {
-    setModalActive(false);
-  };
-
+  console.log(form);
   return (
-    <div className="wrapper">
-      <div className="header">
-        <ul>
-          {steps.map((step) => (
-            <li
-              key={step.id}
-              className={`form_${step.id}_progessbar ${
-                activeForm >= step.id ? 'active' : ''
-              }`}
-            >
-              <div>
-                <p>{step.id}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="form_wrap">
-        {steps.map((step) => (
-          <div
-            key={step.id}
-            className={`form_${step.id} data_info`}
-            style={{ display: activeForm === step.id ? 'block' : 'none' }}
-          >
-            <h2>{step.title}</h2>
-            <form>
-              <div className="form_container">
-                {step.fields.map((field, index) => (
-                  <div key={index} className="input_wrap">
-                    <label htmlFor={field}>{field}</label>
-                    <input
-                      type="text"
-                      name={field}
-                      className="input"
-                      id={field}
-                    />
-                  </div>
-                ))}
-              </div>
-            </form>
-          </div>
-        ))}
-      </div>
-      <div className="btns_wrap">
-        <div className={`common_btns form_${activeForm}_btns`}>
-          {activeForm !== 1 && (
-            <button type="button" className="btn_back" onClick={handleBack}>
-              <span className="icon">
-                <ion-icon name="arrow-back-sharp"></ion-icon>
-              </span>
-              Back
-            </button>
-          )}
-          {activeForm !== steps.length ? (
-            <button type="button" className="btn_next" onClick={handleNext}>
-              Next{' '}
-              <span className="icon">
-                <ion-icon name="arrow-forward-sharp"></ion-icon>
-              </span>
-            </button>
-          ) : (
-            <button type="button" className="btn_done" onClick={handleDone}>
-              Done
-            </button>
-          )}
+    <div className="container">
+      <div className="wrapper">
+        <div className="progress-bar">
+          <div className={`filler ${currentStep >= 1 ? 'active' : ''}`}></div>
+          <div className={`filler ${currentStep >= 2 ? 'active' : ''}`}></div>
+          <div className={`filler ${currentStep >= 3 ? 'active' : ''}`}></div>
         </div>
-      </div>
-      <div className={`modal_wrapper ${modalActive ? 'active' : ''}`}>
-        <div className="shadow" onClick={closeModal}></div>
-        <div className="success_wrap">
-          <span className="modal_icon">
-            <ion-icon name="checkmark-sharp"></ion-icon>
-          </span>
-          <p>You have successfully completed the process.</p>
-          <ion-icon name="close-outline" onClick={closeModal}></ion-icon>
+        {currentStep === 1 && (
+          <Inputs name="firstName" value={form.firstName} onChange={onChange} />
+        )}
+        {currentStep === 2 && <Inputs />}
+        {currentStep === 3 && <Inputs />}
+        <div className="buttons">
+          {currentStep > 1 && <button onClick={prevStep}>Previous</button>}
+          {currentStep < 3 && <button onClick={nextStep}>Next</button>}
         </div>
       </div>
     </div>
   );
+}
+
+function Step1() {
+  return <div>This is step 1</div>;
+}
+
+function Step2() {
+  return <div>This is step 2</div>;
+}
+
+function Step3() {
+  return <div>This is step 3</div>;
 }
 
 export default App;
