@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './assets/styles/style.css';
 import Inputs from './components/Inputs';
 import { useSignUp } from './utils/hooks';
 import { useDispatch } from 'react-redux';
-import { updateForm } from './slices/signUpSlice';
+import { resetForm, updateForm } from './slices/signUpSlice';
 
 function App() {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetForm());
+  }, [dispatch]);
   const [currentStep, setCurrentStep] = useState(1);
 
   const nextStep = () => {
@@ -31,14 +34,127 @@ function App() {
           <div className={`filler ${currentStep >= 2 ? 'active' : ''}`}></div>
           <div className={`filler ${currentStep >= 3 ? 'active' : ''}`}></div>
         </div>
-        {currentStep === 1 && (
-          <Inputs name="firstName" value={form.firstName} onChange={onChange} />
-        )}
-        {currentStep === 2 && <Inputs />}
-        {currentStep === 3 && <Inputs />}
-        <div className="buttons">
-          {currentStep > 1 && <button onClick={prevStep}>Previous</button>}
-          {currentStep < 3 && <button onClick={nextStep}>Next</button>}
+        <div className="formWrapper">
+          {currentStep === 1 && (
+            <>
+              <div>
+                <label className="label" aria-label="firstName">
+                  First Name:
+                </label>
+                <Inputs
+                  id="firstName"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="lastName">
+                  Last Name:
+                </label>
+                <Inputs
+                  id="lastName"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="gender">
+                  Gender:
+                </label>
+                <Inputs
+                  id="gender"
+                  name="gender"
+                  value={form.gender}
+                  onChange={onChange}
+                />
+              </div>
+            </>
+          )}
+          {currentStep === 2 && (
+            <>
+              <div>
+                <label className="label" aria-label="dob">
+                  Date of Birth:
+                </label>
+                <Inputs
+                  id="dob"
+                  name="dob"
+                  value={form.dob}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="contactNumber">
+                  Contact Number:
+                </label>
+                <Inputs
+                  id="contactNumber"
+                  name="contactNumber"
+                  value={form.contactNumber}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="country">
+                  Country:
+                </label>
+                <Inputs
+                  id="country"
+                  name="country"
+                  value={form.country}
+                  onChange={onChange}
+                />
+              </div>
+            </>
+          )}
+          {currentStep === 3 && (
+            <>
+              <div>
+                <label className="label" aria-label="userName">
+                  User Name:
+                </label>
+                <Inputs
+                  id="userName"
+                  name="userName"
+                  value={form.userName}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="email">
+                  Email:
+                </label>
+                <Inputs
+                  id="email"
+                  name="email"
+                  value={form.email}
+                  onChange={onChange}
+                />
+              </div>
+              <div>
+                <label className="label" aria-label="password">
+                  Password:
+                </label>
+                <Inputs
+                  id="password"
+                  name="password"
+                  value={form.password}
+                  onChange={onChange}
+                />
+              </div>
+            </>
+          )}
+          <div className="buttons">
+            <div className="left-side">
+              {currentStep > 1 && <button onClick={prevStep}>Previous</button>}
+            </div>
+            <div className="right-side">
+              {currentStep < 3 && <button onClick={nextStep}>Next</button>}
+              {currentStep === 3 && <button onClick={nextStep}>Submit</button>}
+            </div>
+          </div>
         </div>
       </div>
     </div>

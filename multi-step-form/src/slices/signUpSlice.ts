@@ -25,6 +25,7 @@ export interface SignUpForm {
   password: string;
   confirmPassword: string;
   contactNumber: string;
+  country?: string;
   gender: string;
   id?: number;
   active?: boolean;
@@ -63,6 +64,7 @@ export const initialState: RootObject = {
     confirmPassword: '',
     contactNumber: '',
     gender: '',
+    country: '',
   },
   steps: [
     {
