@@ -29,11 +29,23 @@ function App() {
   return (
     <div className="container">
       <div className="wrapper">
+        <span className="heading">Sign Up Form</span>
         <div className="progress-bar">
           <div className={`filler ${currentStep >= 1 ? 'active' : ''}`}></div>
           <div className={`filler ${currentStep >= 2 ? 'active' : ''}`}></div>
           <div className={`filler ${currentStep >= 3 ? 'active' : ''}`}></div>
         </div>
+
+        {currentStep === 1 && (
+          <span className="sub-heading">Personal Details</span>
+        )}
+        {currentStep === 2 && (
+          <span className="sub-heading">Contact Details</span>
+        )}
+        {currentStep === 3 && (
+          <span className="sub-heading">Login Details</span>
+        )}
+
         <div className="formWrapper">
           {currentStep === 1 && (
             <>
