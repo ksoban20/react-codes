@@ -3,8 +3,15 @@ import './assets/styles/style.css';
 import Inputs from './components/Inputs';
 import { useSignUp } from './utils/hooks';
 import { useDispatch } from 'react-redux';
-import { resetForm, updateForm } from './slices/signUpSlice';
-
+import {
+  SignUpForm,
+  resetForm,
+  setValidationError,
+  updateForm,
+} from './slices/signUpSlice';
+import CountrySelect from './components/CountriesSelect';
+import { signUpFormSchema } from './schema/signUpSchema';
+import * as Yup from 'yup';
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -20,12 +27,31 @@ function App() {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const { form }: any = useSignUp();
+  const {
+    form,
+    error: { validation },
+  }: any = useSignUp();
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.target as HTMLInputElement;
     dispatch(updateForm({ [name]: value }));
   };
-  console.log(form);
+
+  const onSelectChange = (e: React.FormEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target as HTMLSelectElement;
+    dispatch(updateForm({ [name]: value }));
+  };
+
+  const handleFormSubmit = (formData: SignUpForm) => {
+    try {
+      signUpFormSchema.validateSync(formData, { abortEarly: false });
+      // Proceed with form submission...
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        dispatch(setValidationError({ validationErrors: error.errors }));
+      }
+    }
+  };
+  console.log(validation[0]);
   return (
     <div className="container">
       <div className="wrapper">
@@ -37,14 +63,12 @@ function App() {
         </div>
 
         {currentStep === 1 && (
-          <span className="sub-heading">Personal Details</span>
+          <span className="subHeading">Personal Details</span>
         )}
         {currentStep === 2 && (
-          <span className="sub-heading">Contact Details</span>
+          <span className="subHeading">Contact Details</span>
         )}
-        {currentStep === 3 && (
-          <span className="sub-heading">Login Details</span>
-        )}
+        {currentStep === 3 && <span className="subHeading">Login Details</span>}
 
         <div className="formWrapper">
           {currentStep === 1 && (
@@ -53,6 +77,9 @@ function App() {
                 <label className="label" aria-label="firstName">
                   First Name:
                 </label>
+                {!!validation?.firstName && (
+                  <label>{validation.firstName}</label>
+                )}
                 <Inputs
                   id="firstName"
                   name="firstName"
@@ -75,12 +102,19 @@ function App() {
                 <label className="label" aria-label="gender">
                   Gender:
                 </label>
-                <Inputs
-                  id="gender"
-                  name="gender"
-                  value={form.gender}
-                  onChange={onChange}
-                />
+                <div className="inputContainer">
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={form.gender}
+                    onChange={onSelectChange}
+                    className="inputSelect"
+                  >
+                    <option>--select--</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                  </select>
+                </div>
               </div>
             </>
           )}
@@ -95,6 +129,7 @@ function App() {
                   name="dob"
                   value={form.dob}
                   onChange={onChange}
+                  type="date"
                 />
               </div>
               <div>
@@ -112,11 +147,11 @@ function App() {
                 <label className="label" aria-label="country">
                   Country:
                 </label>
-                <Inputs
+                <CountrySelect
                   id="country"
                   name="country"
                   value={form.country}
-                  onChange={onChange}
+                  onChange={onSelectChange}
                 />
               </div>
             </>
@@ -159,12 +194,16 @@ function App() {
             </>
           )}
           <div className="buttons">
-            <div className="left-side">
+            <div className="leftSide">
               {currentStep > 1 && <button onClick={prevStep}>Previous</button>}
             </div>
-            <div className="right-side">
+            <div className="rightSide">
               {currentStep < 3 && <button onClick={nextStep}>Next</button>}
-              {currentStep === 3 && <button onClick={nextStep}>Submit</button>}
+              {currentStep === 3 && (
+                <button onClick={() => handleFormSubmit({ ...form })}>
+                  Submit
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -144,7 +144,7 @@ export const signUpSlice = createSlice({
       state.currentDialog = initialState.currentDialog;
     },
     setValidationError(state, action: IPayload) {
-      state.error.validation = action.payload.validationError;
+      state.error.validation = action.payload.validationErrors;
     },
     resetValidationError(state) {
       state.error.validation = initialState.error.validation;

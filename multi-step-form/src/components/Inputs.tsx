@@ -21,7 +21,7 @@ const Inputs: React.FC<InputProp> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
-    <div className="input_container">
+    <div className="inputContainer">
       <input
         name={name}
         type={type}
