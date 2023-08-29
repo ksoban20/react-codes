@@ -17,7 +17,7 @@ const CountrySelect: React.FC<SelectProp> = ({
   return (
     <div className="inputContainer">
       <select
-        className="inputSelect"
+        className={error ? 'error inputSelect' : 'inputSelect'}
         {...props}
         value={value}
         onChange={onChange}

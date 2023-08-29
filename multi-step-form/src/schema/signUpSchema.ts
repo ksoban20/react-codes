@@ -1,21 +1,25 @@
-import * as Yup from 'yup';
+import * as yup from 'yup';
 
-// Yup validation schema for SignUpForm
-export const signUpFormSchema = Yup.object().shape({
-  firstName: Yup.string().required('First name is required'),
-  lastName: Yup.string(),
-  dob: Yup.date().required('Date of birth is required'),
-  userName: Yup.string().required('Username is required'),
-  email: Yup.string()
+// yup validation schema for SignUpForm
+export const signUpFormSchema = yup.object().shape({
+  firstName: yup.string().required('First name is required'),
+  lastName: yup.string(),
+  dob: yup
+    .date()
+    .required('Date of birth is required')
+    .max(new Date(), 'Invalid date of birth')
+    .transform((curr, orig) => (orig === '' ? null : curr)),
+  userName: yup.string().required('Username is required'),
+  email: yup
+    .string()
     .email('Invalid email format')
     .required('Email is required'),
-  password: Yup.string()
+  password: yup
+    .string()
     .min(8, 'Password must be at least 8 characters')
     .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Passwords must match')
-    .required('Confirm Password is required'),
-  contactNumber: Yup.string().required('Contact number is required'),
-  country: Yup.string(),
-  gender: Yup.string().required('Gender is required'),
+
+  contactNumber: yup.string().required('Contact number is required'),
+  country: yup.string().required('Please select your country'),
+  gender: yup.string().required('Gender is required'),
 });

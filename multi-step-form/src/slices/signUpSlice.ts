@@ -1,6 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+import { RootState } from '../store';
 
 import { hasKeys, diffObject } from '../utils/misc';
+import { validationError } from '../utils/validation';
+
+import { signUpFormSchema } from '../schema/signUpSchema';
 
 const SIGNUP_SLICE = 'signup_slice';
 
@@ -23,7 +28,6 @@ export interface SignUpForm {
   userName: string;
   email: string;
   password: string;
-  confirmPassword: string;
   contactNumber: string;
   country?: string;
   gender: string;
@@ -31,17 +35,10 @@ export interface SignUpForm {
   active?: boolean;
 }
 
-interface Steps {
-  id: number;
-  title: string;
-  fields: (keyof SignUpForm)[];
-}
-
 export interface RootObject {
   signUp: SignUpForm[];
   currentForm: SignUpForm;
   form: SignUpForm;
-  steps: Steps[];
   currentDialog: {
     dialog: string;
     data: {} | null;
@@ -61,28 +58,10 @@ export const initialState: RootObject = {
     userName: '',
     email: '',
     password: '',
-    confirmPassword: '',
     contactNumber: '',
     gender: '',
     country: '',
   },
-  steps: [
-    {
-      id: 1,
-      title: 'Signup Info',
-      fields: ['email', 'password', 'confirmPassword'],
-    },
-    {
-      id: 2,
-      title: 'Personal Info',
-      fields: ['userName', 'firstName', 'lastName', 'dob'],
-    },
-    {
-      id: 3,
-      title: 'Additional Info',
-      fields: ['contactNumber', 'gender'],
-    },
-  ],
   form: {
     firstName: '',
     lastName: '',
@@ -90,7 +69,6 @@ export const initialState: RootObject = {
     userName: '',
     email: '',
     password: '',
-    confirmPassword: '',
     contactNumber: '',
     gender: '',
   },
@@ -107,6 +85,25 @@ export const initialState: RootObject = {
   },
 };
 
+export const submitForm = createAsyncThunk(
+  'login/submitForm',
+  async (_, api) => {
+    const state: any = api.getState() as RootState;
+    const { form: data } = state.signUp;
+    const error = await validationError({ schema: signUpFormSchema, data });
+
+    if (error) {
+      return api.rejectWithValue({ validation: error });
+    }
+
+    try {
+      console.log('submitted');
+    } catch (error) {
+      return api.rejectWithValue({});
+    }
+  }
+);
+
 export const signUpSlice = createSlice({
   name: SIGNUP_SLICE,
   initialState,
@@ -122,13 +119,7 @@ export const signUpSlice = createSlice({
 
       state.touched = hasKeys(diffObject(state.form, initialState.form));
     },
-    updateFormField(
-      state,
-      action: PayloadAction<{ field: keyof SignUpForm; value: string }>
-    ) {
-      const { field, value } = action.payload;
-      Object.assign(state.form, { [field]: value });
-    },
+
     resetForm(state) {
       state.form = initialState.form;
       state.error.validation = initialState.error.validation;
@@ -144,11 +135,26 @@ export const signUpSlice = createSlice({
       state.currentDialog = initialState.currentDialog;
     },
     setValidationError(state, action: IPayload) {
-      state.error.validation = action.payload.validationErrors;
+      state.error.validation = action.payload;
     },
     resetValidationError(state) {
       state.error.validation = initialState.error.validation;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(submitForm.fulfilled, (state, action) => {
+      state.form = initialState.form;
+      state.error.validation = initialState.error.validation;
+      state.loading = false;
+    });
+    builder.addCase(submitForm.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(submitForm.rejected, (state, { payload }: IPayload) => {
+      state.loading = false;
+      state.error.validation = payload.validation;
+      state.error.authentication = payload.authentication;
+    });
   },
 });
 
@@ -158,7 +164,6 @@ export const {
   resetForm,
   setValidationError,
   resetValidationError,
-  updateFormField,
 } = signUpSlice.actions;
 
 export default signUpSlice.reducer;

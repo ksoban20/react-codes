@@ -67,7 +67,7 @@ button:hover {
 
 .inputText, .inputSelect {
   height: 32px;
-  width: 98%;
+  width: 100%;
   max-width: -webkit-fill-available;
   padding: 8px;
   border: 1px solid #c3c3c3;
@@ -99,9 +99,16 @@ button:hover {
   flex-direction: column;
 }
 
-.label {
-  font-size: 14px;
-  margin-bottom: 8px;
+.labelBox{
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.labelError {
+  color: #d33d3d
 }
 
 .heading {
