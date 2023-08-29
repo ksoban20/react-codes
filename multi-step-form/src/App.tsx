@@ -1,11 +1,11 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
-import './assets/styles/style.css';
-import Inputs from './components/Inputs';
-import { useSignUp } from './utils/hooks';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { resetForm, submitForm, updateForm } from './slices/signUpSlice';
-import CountrySelect from './components/CountriesSelect';
+
+import { resetForm } from './slices/signUpSlice';
+
 import SignUpForm from './components/SignUpForm';
+
+import './assets/styles/style.css';
 
 function App() {
   const dispatch = useDispatch();
