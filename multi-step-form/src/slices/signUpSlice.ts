@@ -36,13 +36,8 @@ export interface SignUpForm {
 }
 
 export interface RootObject {
-  signUp: SignUpForm[];
-  currentForm: SignUpForm;
   form: SignUpForm;
-  currentDialog: {
-    dialog: string;
-    data: {} | null;
-  };
+  dialog: boolean;
   touched: boolean;
   loading: boolean;
   success?: any;
@@ -50,18 +45,6 @@ export interface RootObject {
 }
 
 export const initialState: RootObject = {
-  signUp: [],
-  currentForm: {
-    firstName: '',
-    lastName: '',
-    dob: '',
-    userName: '',
-    email: '',
-    password: '',
-    contactNumber: '',
-    gender: '',
-    country: '',
-  },
   form: {
     firstName: '',
     lastName: '',
@@ -72,11 +55,7 @@ export const initialState: RootObject = {
     contactNumber: '',
     gender: '',
   },
-  currentDialog: {
-    dialog: '',
-    data: null,
-  },
-  touched: false,
+  dialog: false,
   loading: false,
   success: null,
   error: {
@@ -97,7 +76,6 @@ export const submitForm = createAsyncThunk(
     }
 
     try {
-      console.log('submitted');
     } catch (error) {
       return api.rejectWithValue({});
     }
@@ -125,14 +103,11 @@ export const signUpSlice = createSlice({
       state.error.validation = initialState.error.validation;
       state.touched = false;
     },
-    setDialog(state, { payload }: IPayload) {
-      state.currentDialog = {
-        ...state.currentDialog,
-        ...payload,
-      };
+    setDialog(state, action) {
+      state.dialog = action.payload;
     },
     resetDialog(state) {
-      state.currentDialog = initialState.currentDialog;
+      state.dialog = initialState.dialog;
     },
     setValidationError(state, action: IPayload) {
       state.error.validation = action.payload;
@@ -146,6 +121,7 @@ export const signUpSlice = createSlice({
       state.form = initialState.form;
       state.error.validation = initialState.error.validation;
       state.loading = false;
+      state.dialog = true;
     });
     builder.addCase(submitForm.pending, (state, action) => {
       state.loading = true;
@@ -153,7 +129,6 @@ export const signUpSlice = createSlice({
     builder.addCase(submitForm.rejected, (state, { payload }: IPayload) => {
       state.loading = false;
       state.error.validation = payload.validation;
-      state.error.authentication = payload.authentication;
     });
   },
 });
@@ -162,6 +137,8 @@ export const {
   reset,
   updateForm,
   resetForm,
+  setDialog,
+  resetDialog,
   setValidationError,
   resetValidationError,
 } = signUpSlice.actions;

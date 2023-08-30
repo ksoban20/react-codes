@@ -25,6 +25,7 @@ const SignUpForm = () => {
 
   const {
     form,
+    loading,
     error: { validation },
   }: any = useSignUp();
 
@@ -269,7 +270,7 @@ const SignUpForm = () => {
                   dispatch(submitForm());
                 }}
               >
-                Submit
+                {loading ? '...loading' : 'Submit'}
               </button>
             )}
           </div>
