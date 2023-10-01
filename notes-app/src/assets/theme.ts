@@ -1,6 +1,8 @@
 export interface ITheme {
   font: Font;
   color: Color;
+  emSize: Size;
+  pxSize: Size;
 }
 export interface Font {
   name: string;
@@ -8,6 +10,16 @@ export interface Font {
   semiBold: number;
   heavy: number;
   xBold: number;
+}
+export interface Size {
+  xs: string;
+  s: string;
+  m: string;
+  l: string;
+  xl: string;
+  xxl: string;
+  xl3: string;
+  xl4: string;
 }
 
 export interface Color {
@@ -67,6 +79,26 @@ export const theme: ITheme = {
     semiBold: 500,
     heavy: 800,
     xBold: 700,
+  },
+  emSize: {
+    xs: '0.25em', //4pc
+    s: '0.5em', //8px
+    m: '1em', //16px
+    l: '1.5em', //24px
+    xl: '2em', //32px
+    xxl: '3em', //48px
+    xl3: '4em', //64px
+    xl4: '6em', //96px
+  },
+  pxSize: {
+    xs: '6px',
+    s: '10px',
+    m: '12px',
+    l: '14px',
+    xl: '18px',
+    xxl: '20px',
+    xl3: '28px',
+    xl4: '42px',
   },
   color,
 };

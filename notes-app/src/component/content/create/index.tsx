@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { RootState } from '../../../store/store';
+import { useDispatch } from 'react-redux';
 
 import { resetForm, submitForm, updateForm } from '../../../store/slices/notes';
 
@@ -21,6 +19,7 @@ import {
 import { color } from '../../../assets/theme';
 
 import { PickColorIcon } from '../../../assets/images/image';
+import { useNote } from '../../../utils/hooks';
 
 const CreateNote = () => {
   const dispatch = useDispatch();
@@ -33,7 +32,7 @@ const CreateNote = () => {
   const openRef = useRef<HTMLDivElement | null>(null);
   const noteContentRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const form = useSelector((state: RootState) => state.notes.form);
+  const { form }: any = useNote();
 
   const hasTitleAndContent = form.title.length > 0 && form.content.length > 0;
   const hasBgColor = form.bgColor.length > 0;
@@ -108,9 +107,7 @@ const CreateNote = () => {
               value={form.content}
             />
             <NoteBottom>
-              <ElementBox
-                onClick={() => dispatch(updateForm({ bgColor: '#fe3' }))}
-              >
+              <ElementBox>
                 <ColorIcon
                   onClick={(e) => {
                     e.stopPropagation();

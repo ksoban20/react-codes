@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Masonry from 'react-masonry-css';
 
@@ -9,6 +9,8 @@ import {
   updateCurrentNote,
   updateNote,
 } from '../../../store/slices/notes';
+
+import { useNote } from '../../../utils/hooks';
 
 import {
   MasonryContainer,
@@ -21,6 +23,7 @@ import {
   ColorBox,
   NoteTitle,
   NoteContent,
+  NoDataWrapper,
 } from '../styled';
 
 import { color } from '../../../assets/theme';
@@ -39,8 +42,7 @@ const Notes = () => {
 
   const loader = useRef(null);
 
-  const notes = useSelector((state: any) => state.notes.notes);
-  const currentNote = useSelector((state: any) => state.notes.currentNote);
+  const { notes, currentNote, searchQuery }: any = useNote();
 
   const handleObserver = (entities: any) => {
     const target = entities[0];
@@ -55,6 +57,7 @@ const Notes = () => {
       rootMargin: '20px',
       threshold: 1.0,
     };
+
     const observer = new IntersectionObserver(handleObserver, options);
     if (loader.current) {
       observer.observe(loader.current);
@@ -63,14 +66,13 @@ const Notes = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      let targetElement: any = e.target; // start with the target element
+      let masonryElement: any = e.target; //
 
-      // check if the clicked element or any of its parents have our 'data-masonry-item' attribute
-      while (targetElement !== null) {
-        if (targetElement.getAttribute('data-masonry-item') === 'true') {
-          return; // exit the function, because we clicked inside a MasonryItem
+      while (masonryElement !== null) {
+        if (masonryElement.getAttribute('data-masonry-item') === 'true') {
+          return;
         }
-        targetElement = targetElement.parentElement;
+        masonryElement = masonryElement.parentElement;
       }
 
       setExpandedItemId(null);
@@ -80,6 +82,7 @@ const Notes = () => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
+
   const breakpointColumnsObj = {
     default: 4,
     1100: 3,
@@ -134,6 +137,9 @@ const Notes = () => {
 
     setOpenColorBox(null);
   };
+  const filteredNotes = notes.filter((note: any) =>
+    note.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <NotesWrapper>
       <MasonryContainer>
@@ -142,131 +148,135 @@ const Notes = () => {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >
-          {notes.length < 1
-            ? 'No Notes'
-            : [...notes].reverse().map((note: any, index: number) => {
-                return (
-                  <div
-                    ref={(el) => (noteRef.current[index] = el)}
+          {notes.length < 1 ? (
+            <NoDataWrapper>
+              No Note to display. Please write your first note...
+            </NoDataWrapper>
+          ) : (
+            [...filteredNotes].reverse().map((note: any, index: number) => {
+              return (
+                <div
+                  ref={(el) => (noteRef.current[index] = el)}
+                  key={index}
+                  data-masonry-item="true"
+                >
+                  <MasonryItem
                     key={index}
-                    data-masonry-item="true"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleItemExpand(note.id);
+                      onUpdateCurrentNote(note);
+                    }}
+                    $expanded={expandedItemId === note.id}
+                    $noteBackground={
+                      expandedItemId === note.id
+                        ? currentNote.bgColor
+                        : note.bgColor
+                    }
+                    $hoverNoteBackground={
+                      expandedItemId === note.id ? hoverColor[note.id] : ''
+                    }
                   >
-                    <MasonryItem
-                      key={index}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleItemExpand(note.id);
-                        onUpdateCurrentNote(note);
-                      }}
-                      $expanded={expandedItemId === note.id}
-                      $noteBackground={
-                        expandedItemId === note.id
-                          ? currentNote.bgColor
-                          : note.bgColor
-                      }
-                      $hoverNoteBackground={
-                        expandedItemId === note.id ? hoverColor[note.id] : ''
-                      }
-                    >
-                      {expandedItemId === note.id ? (
-                        <>
-                          <NoteTitle
-                            name="title"
-                            id="title"
-                            type="text"
-                            value={currentNote.title}
-                            onChange={handleTitleUpdate}
-                          />
-                          <NoteContent
-                            name="content"
-                            id="content"
-                            value={currentNote.content}
-                            onChange={handleContentUpdate}
-                          />
+                    {expandedItemId === note.id ? (
+                      <>
+                        <NoteTitle
+                          name="title"
+                          id="title"
+                          type="text"
+                          value={currentNote.title}
+                          onChange={handleTitleUpdate}
+                        />
+                        <NoteContent
+                          name="content"
+                          id="content"
+                          value={currentNote.content}
+                          onChange={handleContentUpdate}
+                        />
 
-                          <NoteFooterBox>
-                            <NoteColorWrapper
+                        <NoteFooterBox>
+                          <NoteColorWrapper
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <ColorIcon
                               onClick={(e) => {
                                 e.stopPropagation();
+                                handleColorBox(note.id);
                               }}
                             >
-                              <ColorIcon
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleColorBox(note.id);
-                                }}
-                              >
-                                <img src={PickColorIcon} alt="" />
-                              </ColorIcon>
+                              <img src={PickColorIcon} alt="" />
+                            </ColorIcon>
 
-                              {openColorBox === note.id && (
-                                <ColorBox>
-                                  {Object.keys(color.note).map((colorKey) => (
-                                    <button
-                                      key={colorKey}
-                                      style={{
-                                        background:
+                            {openColorBox === note.id && (
+                              <ColorBox>
+                                {Object.keys(color.note).map((colorKey) => (
+                                  <button
+                                    key={colorKey}
+                                    style={{
+                                      background:
+                                        color.note[
+                                          colorKey as keyof typeof color.note
+                                        ],
+                                    }}
+                                    onMouseOver={(e) => {
+                                      e.stopPropagation();
+                                      setHoverColor((prev) => ({
+                                        ...prev,
+                                        [note.id]:
                                           color.note[
                                             colorKey as keyof typeof color.note
                                           ],
-                                      }}
-                                      onMouseOver={(e) => {
-                                        e.stopPropagation();
-                                        setHoverColor((prev) => ({
-                                          ...prev,
-                                          [note.id]:
-                                            color.note[
-                                              colorKey as keyof typeof color.note
-                                            ],
-                                        }));
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.stopPropagation();
-                                        setHoverColor('');
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        onColorPick(note, colorKey);
-                                      }}
-                                    />
-                                  ))}
-                                </ColorBox>
-                              )}
-                              <ColorIcon
-                                $removeIcon
+                                      }));
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.stopPropagation();
+                                      setHoverColor('');
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onColorPick(note, colorKey);
+                                    }}
+                                  />
+                                ))}
+                              </ColorBox>
+                            )}
+                            <ColorIcon
+                              $removeIcon
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                dispatch(deleteNote({ id: note.id }));
+                              }}
+                            >
+                              <img src={DeleteIcon} alt="" />
+                            </ColorIcon>
+                          </NoteColorWrapper>
+                          {expandedItemId === note.id && (
+                            <NoteCloseButton>
+                              <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  dispatch(deleteNote({ id: note.id }));
+                                  setExpandedItemId(null);
+                                  setOpenColorBox(null);
                                 }}
                               >
-                                <img src={DeleteIcon} alt="" />
-                              </ColorIcon>
-                            </NoteColorWrapper>
-                            {expandedItemId === note.id && (
-                              <NoteCloseButton>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedItemId(null);
-                                    setOpenColorBox(null);
-                                  }}
-                                >
-                                  Close
-                                </button>
-                              </NoteCloseButton>
-                            )}
-                          </NoteFooterBox>
-                        </>
-                      ) : (
-                        <>
-                          <h3>{note.title}</h3>
-                          <p>{note.content}</p>
-                        </>
-                      )}
-                    </MasonryItem>
-                  </div>
-                );
-              })}
+                                Close
+                              </button>
+                            </NoteCloseButton>
+                          )}
+                        </NoteFooterBox>
+                      </>
+                    ) : (
+                      <>
+                        <h3>{note.title}</h3>
+                        <p>{note.content}</p>
+                      </>
+                    )}
+                  </MasonryItem>
+                </div>
+              );
+            })
+          )}
         </Masonry>
       </MasonryContainer>
     </NotesWrapper>

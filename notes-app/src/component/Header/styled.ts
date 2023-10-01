@@ -1,91 +1,26 @@
 import styled from 'styled-components';
 
 export const TopBar = styled.div`
-  height: 96px;
-  padding: 8px;
+  height: ${(props) => props.theme.emSize.xl4};
+  padding: ${(props) => props.theme.emSize.s};
   display: flex;
   flex-wrap: nowrap;
-  gap: 32px;
+  gap: ${(props) => props.theme.emSize.xl};
   align-items: center;
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid ${(props) => props.theme.color.lightGray};
 `;
 
 export const MainContent = styled.div`
   height: auto;
   min-height: 90vh;
-  padding: 8px;
-`;
-
-export const HamMenuIcon = styled.div`
-  cursor: pointer;
-  height: 27px;
-  width: 27px;
-  overflow: visible;
-  position: relative;
-  z-index: 2;
-
-  span,
-  span:before,
-  span:after {
-    background: #333;
-    display: block;
-    height: 2px;
-    opacity: 1;
-    position: absolute;
-    transition: 0.3s ease-in-out;
-  }
-
-  span:before,
-  span:after {
-    content: '';
-  }
-
-  span:before {
-    left: 0px;
-    top: -6px;
-    width: 18px;
-  }
-
-  span {
-    right: 0px;
-    top: 13px;
-    width: 18px;
-  }
-
-  span:after {
-    left: 0px;
-    top: 6px;
-    width: 18px;
-  }
-
-  &.close {
-    span:before {
-      top: 0px;
-      transform: rotate(90deg);
-      width: 18px;
-    }
-
-    span {
-      transform: rotate(-45deg);
-      top: 13px;
-      width: 18px;
-    }
-
-    span:after {
-      top: 0px;
-      left: 0;
-      transform: rotate(90deg);
-      opacity: 0;
-      width: 0;
-    }
-  }
+  padding: ${(props) => props.theme.emSize.s};
 `;
 
 export const LogoWrapper = styled.div`
-  width: 48px;
+  width: ${(props) => props.theme.emSize.xxl};
 
   img {
-    width: 42px;
+    width: ${(props) => props.theme.pxSize.xl4};
   }
 `;
 
@@ -95,13 +30,22 @@ export const SearchElement = styled.div`
   gap: 1rem;
 `;
 
-export const SearchBar = styled.input`
+export const SearchBarWrapper = styled.div`
   width: 85%;
-  height: 48px;
-  padding: 8px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+`;
+
+export const SearchBar = styled.input`
+  width: 100%;
+  height: ${(props) => props.theme.emSize.xxl};
+  padding: ${(props) => props.theme.emSize.m};
   min-width: 120px;
+  font-size: ${(props) => props.theme.emSize.m};
+  font-weight: 600;
   border: 1px solid ${(props) => props.theme.color.lightGray};
-  border-radius: 12px;
+  border-radius: ${(props) => props.theme.pxSize.m};
   transition: 500ms;
   &:focus {
     border: 1px solid ${(props) => props.theme.color.gray};
@@ -109,14 +53,28 @@ export const SearchBar = styled.input`
   }
 `;
 
+export const ClearButton = styled.button`
+  width: ${(props) => props.theme.pxSize.xxl};
+  position: absolute;
+  right: ${(props) => props.theme.emSize.m};
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  img {
+    width: ${(props) => props.theme.emSize.m};
+  }
+`;
+
 export const SettingIconWrapper = styled.div`
   width: 12%;
   display: flex;
   justify-content: end;
-  gap: 32px;
+  gap: ${(props) => props.theme.emSize.xl};
 
   img {
-    width: 32px;
+    width: ${(props) => props.theme.emSize.xl};
     cursor: pointer;
     &:hover {
       filter: brightness(0) saturate(100%) invert(10%) sepia(46%)

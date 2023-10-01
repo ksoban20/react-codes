@@ -14,11 +14,11 @@ type NoteProps = {
 export const MainContent = styled.div`
   height: auto;
   min-height: 90vh;
-  padding: 32px;
+  padding: ${(props) => props.theme.emSize.xl};
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 0.4fr 1.6fr;
-  gap: 16px 0px;
+  gap: ${(props) => props.theme.emSize.m} 0px;
   grid-template-areas:
     'create'
     'notes';
@@ -35,12 +35,12 @@ export const CreateBoxWrapper = styled.div`
 export const CreateNoteBox = styled.div<NoteProps>`
   width: auto;
   min-width: 35%;
-  height: 42px;
-  padding: 0px 16px;
+  height: ${(props) => props.theme.pxSize.xl4};
+  padding: 0px ${(props) => props.theme.emSize.m};
   display: flex;
   flex-wrap: wrap-reverse;
   align-items: center;
-  border-radius: 8px;
+  border-radius: ${(props) => props.theme.emSize.s};
   box-shadow: 0px 0px 7px -1px rgba(0, 0, 0, 1);
   background-color: ${(props) => props.$createBg || '#fff'};
 
@@ -50,9 +50,10 @@ export const CreateNoteBox = styled.div<NoteProps>`
     css`
       height: auto;
       align-items: start;
-      padding: 8px 16px;
+      padding: ${(props) => props.theme.emSize.s}
+        ${(props) => props.theme.emSize.m};
       flex-direction: column;
-      gap: 8px;
+      gap: ${(props) => props.theme.emSize.s};
     `}
   &:hover {
     background-color: ${(props) => props.$hoverCreateBg || 'none'};
@@ -60,12 +61,12 @@ export const CreateNoteBox = styled.div<NoteProps>`
 `;
 
 export const NoteTitle = styled.input`
-  height: 32px;
+  height: ${(props) => props.theme.emSize.xl};
   width: 100%;
   outline: none;
   border: none;
   border-bottom: 1px solid ${(props) => props.theme.color.lightGray};
-  font-size: 18px;
+  font-size: 1 ${(props) => props.theme.emSize.s};
   font-weight: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.darkPurple};
   background-color: inherit;
@@ -75,7 +76,7 @@ export const NoteContent = styled.textarea`
   width: 100%;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: ${(props) => props.theme.emSize.m};
   color: ${(props) => props.theme.color.darkPurple};
   background-color: inherit;
   resize: none;
@@ -96,7 +97,7 @@ export const ElementBox = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
+  gap: ${(props) => props.theme.emSize.s};
 `;
 
 export const SubmitBox = styled.div`
@@ -104,19 +105,19 @@ export const SubmitBox = styled.div`
   height: 100%;
   padding: 5px;
   display: flex;
-  gap: 8px;
+  gap: ${(props) => props.theme.emSize.s};
   align-self: end;
 `;
 
 export const SubmitButton = styled.button<NoteProps>`
-  height: 32px;
+  height: ${(props) => props.theme.emSize.xl};
   width: 100%;
   border: none;
   background-color: ${(props) => props.theme.color.lightYellow};
   color: ${(props) => props.theme.color.darkPurple};
-  border-radius: 16px;
+  border-radius: ${(props) => props.theme.emSize.m};
   cursor: pointer;
-  font-size: 14px;
+  font-size: ${(props) => props.theme.pxSize.l};
   font-weight: 500;
   &:hover {
     background-color: ${(props) => props.theme.color.yellowish};
@@ -141,7 +142,7 @@ export const SubmitButton = styled.button<NoteProps>`
 export const NotesWrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: 4rem;
+  padding: ${(props) => props.theme.emSize.xl3};
 `;
 
 export const MasonryContainer = styled.div`
@@ -160,11 +161,11 @@ export const MasonryContainer = styled.div`
 export const MasonryItem = styled.div<NoteProps>`
   background-color: ${(props) => props.$noteBackground || '#f1f1f1'};
   margin-bottom: 30px;
-  padding: 20px;
+  padding: ${(props) => props.theme.pxSize.xxl};
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: top 0.3s ease, left 0.3s ease, transform 0.3s ease-in-out;
-
+  cursor: pointer;
   /* Expanded State */
   ${(props) =>
     props.$expanded &&
@@ -176,6 +177,7 @@ export const MasonryItem = styled.div<NoteProps>`
     width: 500px;
     height: auto;
     z-index: 999;
+    cursor: default;
   `}
   transition:background-color 500ms ease-in-out;
   &:hover {
@@ -187,12 +189,12 @@ export const NoteFooterBox = styled.div`
   display: flex;
   padding: 8px 0px;
   flex-wrap: nowrap;
-  gap: 8px;
+  gap: ${(props) => props.theme.emSize.s};
   justify-content: space-between;
 
   button {
-    width: 20px;
-    height: 20px;
+    width: ${(props) => props.theme.pxSize.xxl};
+    height: ${(props) => props.theme.pxSize.xxl};
     border-radius: 50%;
     border: 1px solid gray;
     cursor: pointer;
@@ -204,17 +206,17 @@ export const NoteColorWrapper = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
+  gap: ${(props) => props.theme.emSize.s};
 `;
 export const NoteCloseButton = styled.div`
   width: 60px;
-  height: 32px;
+  height: ${(props) => props.theme.emSize.xl};
   button {
     height: 85%;
     width: 100%;
     border: none;
     background: none;
-    border-radius: 10px;
+    border-radius: ${(props) => props.theme.pxSize.s};
     &:hover {
       border: 1px solid ${(props) => props.theme.color.gray};
     }
@@ -222,11 +224,11 @@ export const NoteCloseButton = styled.div`
 `;
 
 export const ColorIcon = styled.div<NoteProps>`
-  width: 24px;
+  width: ${(props) => props.theme.emSize.l};
   cursor: pointer;
   img {
-    width: 20px;
-    height: 20px;
+    width: ${(props) => props.theme.pxSize.xxl};
+    height: ${(props) => props.theme.pxSize.xxl};
     cursor: pointer;
     &:hover {
       transform: rotate(180deg);
@@ -236,8 +238,8 @@ export const ColorIcon = styled.div<NoteProps>`
     props.$removeIcon &&
     css`
       img {
-        width: 18px;
-        height: 18px;
+        width: 1 ${(props) => props.theme.emSize.s};
+        height: 1 ${(props) => props.theme.emSize.s};
 
         &:hover {
           filter: brightness(0) saturate(100%) invert(17%) sepia(92%)
@@ -252,20 +254,28 @@ export const ColorBox = styled.div`
   position: sticky;
   width: auto;
   z-index: 1;
-  /* background-color: #fff; */
   height: auto;
-  border-radius: 16px;
+  border-radius: ${(props) => props.theme.emSize.m};
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
-  padding: 8px;
+  padding: ${(props) => props.theme.emSize.s};
   align-content: center;
   gap: 4px;
   button {
-    width: 20px;
-    height: 20px;
+    width: ${(props) => props.theme.pxSize.xxl};
+    height: ${(props) => props.theme.pxSize.xxl};
     border-radius: 50%;
     border: 1px solid gray;
     cursor: pointer;
   }
+`;
+
+export const NoDataWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  right: ${(props) => props.theme.pxSize.s};
+  position: fixed;
 `;

@@ -17,6 +17,7 @@ export interface RootObject {
   notes: NoteForm[];
   idCounter: number;
   currentNote: NoteForm;
+  searchQuery: string;
 }
 const initialState: RootObject = {
   form: {
@@ -32,6 +33,7 @@ const initialState: RootObject = {
     content: '',
     bgColor: '',
   },
+  searchQuery: '',
 };
 
 export const notesSlice = createSlice({
@@ -66,7 +68,9 @@ export const notesSlice = createSlice({
     deleteNote: (state, action: { payload: { id: number } }) => {
       state.notes = state.notes.filter((note) => note.id !== action.payload.id);
     },
-
+    noteSearch: (state, action: { payload: string }) => {
+      state.searchQuery = action.payload;
+    },
     resetForm: (state) => {
       state.form = initialState.form;
     },
@@ -84,6 +88,7 @@ export const {
   updateNote,
   deleteNote,
   updateCurrentNote,
+  noteSearch,
 } = notesSlice.actions;
 
 export default notesSlice.reducer;

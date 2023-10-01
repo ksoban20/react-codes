@@ -1,0 +1,7 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="11" cy="11" r="11" fill="#80869D" />
+    <rect x="14.8891" y="5.16626" width="2.75" height="13.75" rx="1" transform="rotate(45 14.8891 5.16626)"
+        fill="white" />
+    <rect width="2.75" height="13.75" rx="1" transform="matrix(-0.707107 0.707107 0.707107 0.707107 7.11094 5.16626)"
+        fill="white" />
+</svg>
