@@ -38,8 +38,8 @@ Notes App is a modern and efficient note management application, designed with t
 ## Setup and Installation
 __Clone the Repository:__
 
-`git clone [repository-link]
-cd [directory-name]`
+`git clone [https://github.com/ksoban20/react-codes.git]
+cd [notes-app]`
 
 **Install Dependencies:**
 
@@ -62,11 +62,11 @@ Open your browser and head to http://localhost:5173 to see the app live.
 **_Contributions are always welcome!_**
 
 ## Fork the Project.
-Create your Feature Branch `(git checkout -b feature/AmazingFeature)`.
+Create your Feature Branch `(git checkout -b your/newFeature)`.
 
-Commit Changes `(git commit -m 'Add some AmazingFeature')`.
+Commit Changes `(git commit -m 'add some new feature')`.
 
-Push to your Branch `(git push origin feature/AmazingFeature)`.
+Push to your Branch `(git push origin your/newFeature)`.
 
 **_Open a Pull Request._**
 
