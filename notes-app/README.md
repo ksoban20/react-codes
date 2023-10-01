@@ -47,7 +47,7 @@ cd [notes-app]`
 
 **Run the App Locally:**
 
-`vite start`
+`npm run dev`
 
 Open your browser and head to http://localhost:5173 to see the app live.
 
