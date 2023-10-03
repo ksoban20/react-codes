@@ -9,6 +9,8 @@ Notes App is a modern and efficient note management application, designed with t
 | [Technologies Used](#technologies-used) |
 | [File Structure](#file-structure)       |
 | [Setup and Installation](#setup-and-installation) |
+| [Demo](#demo) |
+
 | [Usage](#usage)                   |
 | [Contribution](#contribution)         |
 | [License](#license)               |
@@ -50,6 +52,10 @@ cd [notes-app]`
 `npm run dev`
 
 Open your browser and head to http://localhost:5173 to see the app live.
+
+## Demo
+
+https://react-reduxtoolkit-note-app.netlify.app/
 
 ## Usage
 + __Creating a Note:__ Begin by clicking on 'Take a note...' to initiate note creation.
