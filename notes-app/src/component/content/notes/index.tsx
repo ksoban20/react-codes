@@ -32,10 +32,9 @@ import { DeleteIcon, PickColorIcon } from '../../../assets/images/image';
 const Notes = () => {
   const dispatch = useDispatch();
 
-  const [page, setPage] = useState(1);
   const [expandedItemId, setExpandedItemId] = useState<number | null>(null);
   const [openColorBox, setOpenColorBox] = useState<number | null>(null);
-  const [colors, setColors] = useState<Record<number, string>>({});
+
   const [hoverColor, setHoverColor] = useState<Record<number, string>>({});
 
   const noteRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -44,25 +43,20 @@ const Notes = () => {
 
   const { notes, currentNote, searchQuery }: any = useNote();
 
-  const handleObserver = (entities: any) => {
-    const target = entities[0];
-    if (target.isIntersecting) {
-      setPage((prev) => prev + 1);
-    }
+  const handleObserver = () => {
+    useEffect(() => {
+      const options = {
+        root: null,
+        rootMargin: '20px',
+        threshold: 1.0,
+      };
+
+      const observer = new IntersectionObserver(handleObserver, options);
+      if (loader.current) {
+        observer.observe(loader.current);
+      }
+    }, []);
   };
-
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '20px',
-      threshold: 1.0,
-    };
-
-    const observer = new IntersectionObserver(handleObserver, options);
-    if (loader.current) {
-      observer.observe(loader.current);
-    }
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -120,13 +114,8 @@ const Notes = () => {
       })
     );
   };
-  const onColorPick = (note: any, colorKey: any) => {
+  const onColorPick = (colorKey: any) => {
     const selectedColor = color.note[colorKey as keyof typeof color.note];
-
-    setColors((prev) => ({
-      ...prev,
-      [note.id]: selectedColor,
-    }));
 
     dispatch(
       updateCurrentNote({
@@ -235,7 +224,7 @@ const Notes = () => {
                                     }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      onColorPick(note, colorKey);
+                                      onColorPick(colorKey);
                                     }}
                                   />
                                 ))}
