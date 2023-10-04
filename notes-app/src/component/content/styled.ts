@@ -150,6 +150,22 @@ export const SubmitButton = styled.button<NoteProps>`
 export const NotesWrapper = styled.div`
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: ${(props) => props.theme.emSize.s};
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${(props) => props.theme.color.light};
+    border-radius: ${(props) => props.theme.pxSize.s};
+    visibility: hidden;
+  }
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      visibility: visible;
+    }
+  }
 `;
 
 export const MasonryContainer = styled.div`
@@ -166,7 +182,8 @@ export const MasonryContainer = styled.div`
 `;
 
 export const MasonryItem = styled.div<NoteProps>`
-  background-color: ${(props) => props.$noteBackground || '#f1f1f1'};
+  background-color: ${(props) =>
+    props.$noteBackground || `${props.theme.color.fair}`};
   margin-bottom: 30px;
   padding: ${(props) => props.theme.pxSize.xxl};
   border-radius: 5px;

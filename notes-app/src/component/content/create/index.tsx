@@ -94,7 +94,7 @@ const CreateNote = () => {
         {isDialogOpen && (
           <>
             <NoteTitle
-              maxLength={20}
+              maxLength={30}
               placeholder="Title..."
               value={form.title}
               onChange={handleChange}
