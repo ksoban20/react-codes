@@ -43,6 +43,7 @@ const CreateNote = () => {
         setIsDialogOpen(false);
         setColors('');
         setHoverColor('');
+        setOpenColorBox(false);
 
         if (hasTitleAndContent || (hasTitleAndContent && hasBgColor)) {
           dispatch(submitForm());

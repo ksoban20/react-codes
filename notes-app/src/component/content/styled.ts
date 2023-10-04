@@ -58,6 +58,9 @@ export const CreateNoteBox = styled.div<NoteProps>`
   &:hover {
     background-color: ${(props) => props.$hoverCreateBg || 'none'};
   }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 export const NoteTitle = styled.input`
@@ -107,30 +110,35 @@ export const SubmitBox = styled.div`
   display: flex;
   gap: ${(props) => props.theme.emSize.s};
   align-self: end;
+  @media (max-width: 500px) {
+    width: 72px;
+    flex-wrap: wrap-reverse;
+  }
 `;
 
 export const SubmitButton = styled.button<NoteProps>`
   height: ${(props) => props.theme.emSize.xl};
   width: 100%;
   border: none;
-  background-color: ${(props) => props.theme.color.lightYellow};
+  background-color: ${(props) => props.theme.color.lightGray};
   color: ${(props) => props.theme.color.darkPurple};
   border-radius: ${(props) => props.theme.emSize.m};
   cursor: pointer;
   font-size: ${(props) => props.theme.pxSize.l};
   font-weight: 500;
   &:hover {
-    background-color: ${(props) => props.theme.color.yellowish};
+    background-color: ${(props) => props.theme.color.darkPurple};
+    color: ${(props) => props.theme.color.fair};
   }
   ${(props) =>
     props.$clearButton === true &&
     css`
-      border: 1px solid ${(props) => props.theme.color.lightGray};
-      background-color: #fff;
+      background-color: transparent;
 
       &:hover {
-        background-color: ${(props) => props.theme.color.darkPurple};
-        color: ${(props) => props.theme.color.fair};
+        border: 1px solid ${(props) => props.theme.color.darkPurple};
+        background-color: transparent;
+        color: ${(props) => props.theme.color.darkPurple};
       }
     `}
   &:disabled {
@@ -142,7 +150,6 @@ export const SubmitButton = styled.button<NoteProps>`
 export const NotesWrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: ${(props) => props.theme.emSize.xl3};
 `;
 
 export const MasonryContainer = styled.div`
@@ -178,6 +185,10 @@ export const MasonryItem = styled.div<NoteProps>`
     height: auto;
     z-index: 999;
     cursor: default;
+    @media (max-width: 500px) {
+      width: 300px;
+    }
+    
   `}
   transition:background-color 500ms ease-in-out;
   &:hover {
@@ -191,7 +202,7 @@ export const NoteFooterBox = styled.div`
   flex-wrap: nowrap;
   gap: ${(props) => props.theme.emSize.s};
   justify-content: space-between;
-
+  align-items: center;
   button {
     width: ${(props) => props.theme.pxSize.xxl};
     height: ${(props) => props.theme.pxSize.xxl};
@@ -276,6 +287,11 @@ export const NoDataWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  text-align: center;
   right: ${(props) => props.theme.pxSize.s};
   position: fixed;
+  @media (max-width: 500px) {
+    position: unset;
+    right: unset;
+  }
 `;
