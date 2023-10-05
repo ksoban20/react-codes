@@ -75,9 +75,11 @@ const CreateNote = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (hasTitleAndContent || (hasTitleAndContent && hasBgColor)) {
       dispatch(submitForm());
       setHoverColor('');
+      setIsDialogOpen(false);
     }
   };
 
